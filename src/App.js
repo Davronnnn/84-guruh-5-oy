@@ -1,49 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import './main.scss';
-import Header from './components/Header';
-import Todos from './components/Todos/Todos';
+import React, { useState, useEffect, useReducer } from 'react';
+import styles from './app.module.scss';
+import Post from './componets/Post';
+
+const initialState = {
+	posts: [],
+	loading: false,
+};
+
+const reducer = (state, action) => {
+	switch (action.type) {
+		case 'pending':
+			return {
+				...state,
+				loading: true,
+			};
+		case 'success':
+			return {
+				// update state
+				posts: action.payload,
+				loading: false,
+			};
+		case 'failed':
+			return {
+				...state,
+				loading: false,
+			};
+
+		default:
+			return state;
+	}
+};
 
 function App() {
-	const [lang, setLang] = useState(
-		localStorage.getItem('lang') ? localStorage.getItem('lang') : 'uz'
-	);
-	const [counter, setCounter] = useState(1);
-
-	const [posts, setPosts] = useState({});
+	const [data, dispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {
-		fetch(`https://jsonplaceholder.typicode.com/users/${counter}`)
+		dispatch({ type: 'pending' });
+
+		fetch('https://jsonplaceholder.typicode.com/posts')
 			.then((res) => res.json())
 			.then((data) => {
-				console.log(data);
-				setPosts(data);
+				if (Object.keys(data).length > 0) {
+					dispatch({ type: 'success', payload: data });
+				} else {
+					dispatch({ type: 'failed' });
+				}
+			})
+			.catch((err) => {
+				dispatch({ type: 'failed' });
 			});
-	}, [counter]);
-
-	const changeLanguageHandler = (e) => {
-		setLang(e.target.value);
-		localStorage.setItem('lang', e.target.value);
-	};
+	}, []);
 
 	return (
 		<div className='App container my-5'>
-			<p>{counter}</p>
-			<Header lang={lang} changeLanguage={changeLanguageHandler} />
-			<Todos />
+			<h1 className={`${styles.title}`}>Title App</h1>
 
-			<input
-				type='text'
-				value={counter}
-				onChange={(e) => {
-					setCounter(e.target.value);
-				}}
-				name=''
-				id=''
-			/>
-			<h2>{posts.name}</h2>
-			<p>{posts.username}</p>
+			{data.loading ? (
+				<div>Loading...</div>
+			) : (
+				data?.posts?.map((post, key) => <Post key={key} data={post} />)
+			)}
 		</div>
 	);
 }
 
 export default App;
+
+// useEffect(() => {
+// 	fetch(`https://jsonplaceholder.typicode.com/users/${counter}`)
+// 		.then((res) => res.json())
+// 		.then((data) => {
+// 			console.log(data);
+// 			setPosts(data);
+// 		});
+// }, [counter]);
+
+// const changeLanguageHandler = (e) => {
+// 	setLang(e.target.value);
+// 	localStorage.setItem('lang', e.target.value);
+// };
