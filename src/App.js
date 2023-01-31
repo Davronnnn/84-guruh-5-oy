@@ -1,81 +1,39 @@
-import React, { useState, useEffect, useReducer } from 'react';
-import styles from './app.module.scss';
-import Post from './componets/Post';
+import React, { useState, useEffect } from 'react';
 
-const initialState = {
-	posts: [],
-	loading: false,
-};
+import Counter from './componets/Counter.jsx';
 
-const reducer = (state, action) => {
-	switch (action.type) {
-		case 'pending':
-			return {
-				...state,
-				loading: true,
-			};
-		case 'success':
-			return {
-				// update state
-				posts: action.payload,
-				loading: false,
-			};
-		case 'failed':
-			return {
-				...state,
-				loading: false,
-			};
-
-		default:
-			return state;
-	}
-};
-
+import ProductCard from './componets/ProductCard.jsx';
 function App() {
-	const [data, dispatch] = useReducer(reducer, initialState);
+	const [products, setProducts] = useState([]);
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		dispatch({ type: 'pending' });
-
-		fetch('https://jsonplaceholder.typicode.com/posts')
+		setLoading(true);
+		fetch('https://fakestoreapi.com/products')
 			.then((res) => res.json())
-			.then((data) => {
-				if (Object.keys(data).length > 0) {
-					dispatch({ type: 'success', payload: data });
-				} else {
-					dispatch({ type: 'failed' });
-				}
-			})
-			.catch((err) => {
-				dispatch({ type: 'failed' });
+			.then((json) => {
+				console.log(json);
+				setProducts(json);
+				setLoading(false);
 			});
+
+		fetch('https://fakestoreapi.com/products/categories')
+			.then((res) => res.json())
+			.then((json) => console.log(json));
 	}, []);
 
 	return (
-		<div className='App container my-5'>
-			<h1 className={`${styles.title}`}>Title App</h1>
-
-			{data.loading ? (
-				<div>Loading...</div>
-			) : (
-				data?.posts?.map((post, key) => <Post key={key} data={post} />)
-			)}
+		<div className=' p-5  '>
+			<h1 className='bg-blue-500 '>Title App</h1>
+			{loading ? <div>Loading..</div> : ''}
+			<Counter />
+			<div className='d-flex flex flex-wrap gap-3 p-10'>
+				{products.map((product) => (
+					<ProductCard key={product.id} data={product} />
+				))}
+			</div>
 		</div>
 	);
 }
 
 export default App;
-
-// useEffect(() => {
-// 	fetch(`https://jsonplaceholder.typicode.com/users/${counter}`)
-// 		.then((res) => res.json())
-// 		.then((data) => {
-// 			console.log(data);
-// 			setPosts(data);
-// 		});
-// }, [counter]);
-
-// const changeLanguageHandler = (e) => {
-// 	setLang(e.target.value);
-// 	localStorage.setItem('lang', e.target.value);
-// };

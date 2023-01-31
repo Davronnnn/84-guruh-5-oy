@@ -1,6 +1,4 @@
 import React from 'react';
-import styles from './post.module.css';
-import { Title } from './Title.styled';
 
 const Post = (props) => {
 	const { data } = props;
@@ -10,11 +8,9 @@ const Post = (props) => {
 				{data.title}
 			</h2> */}
 			<div className='parent'>
-				<Title color='green' fontBigger={true}>
-					{data.title}
-				</Title>
+				<p>{data.title}</p>
 			</div>
-			<Title color='red'>{data.title}</Title>
+			<div>{data.title}</div>
 		</div>
 	);
 };
