@@ -1,9 +1,12 @@
-import React from 'react';
-
+import React, { useContext } from 'react';
+import { ShopContext } from '../../context/ShopContext';
 const ProductCard = ({ data }) => {
+	const { increaseCounter } = useContext(ShopContext);
+
 	return (
 		<div className='w-1/4 rounded overflow-hidden shadow-lg'>
 			<img
+				onClick={() => increaseCounter(data.id,data)}
 				className='w-full'
 				src={data.image}
 				alt='Sunset in the mountains'
