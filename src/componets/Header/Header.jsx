@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Language } from '../../assets/language';
 import { LanguageContext } from '../../context/LanguageContext';
 import { ShopContext } from '../../context/ShopContext';
@@ -14,7 +15,7 @@ export default function Header() {
 		setLang(e.target.value);
 	};
 
-	console.log(counter);
+	const { pathname } = useLocation();
 
 	return (
 		<header>
@@ -35,6 +36,36 @@ export default function Header() {
 							{counter}
 						</span>
 					</a>
+					<ul className='flex'>
+						<li className='mr-6'>
+							<NavLink
+								className={`text-blue-500 hover:text-blue-800`}
+								style={({ isActive }) => ({
+									textDecoration: isActive
+										? 'underline'
+										: 'none',
+									color: isActive ? 'red' : '',
+								})}
+								to='/'>
+								Home
+							</NavLink>
+						</li>
+						<li className='mr-6'>
+							<NavLink
+								style={({ isActive }) => ({
+									textDecoration: isActive
+										? 'underline'
+										: 'none',
+									color: isActive ? 'red' : '',
+								})}
+								className={`text-blue-500 hover:text-blue-800 ${
+									pathname === '/about' && 'underline'
+								}`}
+								to='/about'>
+								About
+							</NavLink>
+						</li>
+					</ul>
 					<div className='flex items-center lg:order-2'>
 						<select
 							style={{

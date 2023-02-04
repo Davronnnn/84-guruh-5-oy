@@ -1,18 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
-import { LanguageContextProvider } from './context/LanguageContext';
-import ShopContextProvider from './context/ShopContext';
+
 import './main.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
 	// <React.StrictMode>
-	<LanguageContextProvider>
-		<ShopContextProvider>
-			<App />
-		</ShopContextProvider>
-	</LanguageContextProvider>
+	<BrowserRouter>
+		<App />
+	</BrowserRouter>
 	// </React.StrictMode>
 );

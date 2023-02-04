@@ -1,7 +1,9 @@
+import { motion, useScroll } from 'framer-motion';
 import React, { useContext, useEffect, useState } from 'react';
 import { LanguageContext } from '../../context/LanguageContext';
 import { BASE_URL } from '../../utils/constantas';
 import Categories from '../Categories';
+import MotionProgress from '../MotionAnimation/MotionProgress';
 import ProductCard from './ProductCard';
 
 const ProductList = () => {
@@ -26,6 +28,7 @@ const ProductList = () => {
 
 	return (
 		<div>
+			<MotionProgress />
 			<h4 className='text-3xl text-center'>
 				{lang === 'uz'
 					? 'Mahsulotlar'
