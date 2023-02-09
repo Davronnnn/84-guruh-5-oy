@@ -1,17 +1,51 @@
-import { motion } from 'framer-motion';
 import React, { useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import FavoritesContext from '../../context/FavoritesContext';
 import { ShopContext } from '../../context/ShopContext';
 import MotionOpacity from '../MotionAnimation/MotionOpacity';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const ProductCard = ({ data }) => {
 	const { increaseCounter } = useContext(ShopContext);
-
-		
+	const { favoriteList, setFavoriteList } = useContext(FavoritesContext);
 
 	useEffect(() => {}, []);
 
+	const addToFavorites = (data) => {
+		let has = false;
+		favoriteList.forEach((product) => {
+			if (product.id === data.id) {
+				has = true;
+			}
+		});
+
+		if (!has) {
+			setFavoriteList([...favoriteList, data]);
+			toast.success("Mahsulot qo'shildi!");
+		} else {
+			toast.warning('Mahsulot olib tashlandi!');
+			const result = favoriteList.filter((product) => {
+				if (product.id !== data.id) {
+					return product;
+				}
+			});
+			setFavoriteList(result);
+		}
+	};
 	return (
 		<MotionOpacity>
+			<ToastContainer
+				position='top-right'
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				draggable
+				theme='light'
+			/>
+			{/* Same as */}
 			<div>
 				<Link to={'/product/' + data?.id}>
 					<img
@@ -38,6 +72,15 @@ const ProductCard = ({ data }) => {
 						{data?.rating?.rate}
 						<span>{data?.rating?.count}</span>
 					</p>
+
+					<button
+						onClick={() => addToFavorites(data)}
+						className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
+						Add to favorite
+					</button>
+					<button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
+						Add to backet
+					</button>
 				</div>
 			</div>
 		</MotionOpacity>

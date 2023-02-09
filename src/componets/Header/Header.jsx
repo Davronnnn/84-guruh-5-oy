@@ -4,9 +4,13 @@ import { Language } from '../../assets/language';
 import { LanguageContext } from '../../context/LanguageContext';
 import { ShopContext } from '../../context/ShopContext';
 
+import shopIcon from '../../assets/images/shopping-cart.png';
+import likeIcon from '../../assets/images/likeIcon.png';
+import FavoritesContext from '../../context/FavoritesContext';
+
 export default function Header() {
 	// const [navbarOpen, setNavbarOpen] = useState(false);
-
+	const { favoriteList } = useContext(FavoritesContext);
 	const { counter } = useContext(ShopContext);
 
 	const { lang, setLang } = useContext(LanguageContext);
@@ -65,7 +69,28 @@ export default function Header() {
 								About
 							</NavLink>
 						</li>
+
+						<li className='ml-3 relative'>
+							<img width={40} height={40} src={shopIcon} alt='' />
+							<span className='text-white absolute  left-full bottom-3 bg-blue-600 py-1 px-2 rounded-full'>
+								0
+							</span>
+						</li>
+						<Link to={"/favorites"}>
+							<li className='ml-9 relative'>
+								<img
+									width={40}
+									height={40}
+									src={likeIcon}
+									alt=''
+								/>
+								<span className='text-white absolute  left-full bottom-3 bg-blue-600 py-1 px-2 rounded-full'>
+									{favoriteList.length}
+								</span>
+							</li>
+						</Link>
 					</ul>
+
 					<div className='flex items-center lg:order-2'>
 						<select
 							style={{
