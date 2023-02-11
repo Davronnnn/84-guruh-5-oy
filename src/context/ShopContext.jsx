@@ -7,7 +7,6 @@ const ShopContextProvider = ({ children }) => {
 	const [counter, setCounter] = useState(products.length);
 
 	const increaseCounter = (id, data) => {
-		console.log(id);
 		const result = products.filter((product) => {
 			if (product.id !== id) {
 				setCounter((prev) => prev + 1);
@@ -16,7 +15,6 @@ const ShopContextProvider = ({ children }) => {
 				return product;
 			}
 		});
-		console.log(result);
 
 		setProducts(result);
 	};

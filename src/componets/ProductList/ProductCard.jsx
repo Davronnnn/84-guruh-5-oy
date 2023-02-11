@@ -6,32 +6,49 @@ import MotionOpacity from '../MotionAnimation/MotionOpacity';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from 'react-redux';
 const ProductCard = ({ data }) => {
 	const { increaseCounter } = useContext(ShopContext);
 	const { favoriteList, setFavoriteList } = useContext(FavoritesContext);
 
-	useEffect(() => {}, []);
+	const { products } = useSelector((state) => state);
+	const dispatch = useDispatch();
 
 	const addToFavorites = (data) => {
-		let has = false;
-		favoriteList.forEach((product) => {
-			if (product.id === data.id) {
-				has = true;
-			}
-		});
-
-		if (!has) {
-			setFavoriteList([...favoriteList, data]);
-			toast.success("Mahsulot qo'shildi!");
-		} else {
-			toast.warning('Mahsulot olib tashlandi!');
-			const result = favoriteList.filter((product) => {
-				if (product.id !== data.id) {
-					return product;
+		if (products.length > 0) {
+			products.forEach((product) => {
+				console.log(product, data);
+				if (product._id == data._id) {
+					dispatch({ type: 'removeFavorite', payload: data });
+				} else {
+					dispatch({ type: 'addToFavorite', payload: data });
 				}
 			});
-			setFavoriteList(result);
+		} else {
+			dispatch({ type: 'addToFavorite', payload: data });
 		}
+
+		// 	console.log(data);
+
+		// let has = false;
+		// favoriteList.forEach((product) => {
+		// 	if (product.id === data.id) {
+		// 		has = true;
+		// 	}
+		// });
+
+		// if (!has) {
+		// 	setFavoriteList([...favoriteList, data]);
+		// 	toast.success("Mahsulot qo'shildi!");
+		// } else {
+		// 	toast.warning('Mahsulot olib tashlandi!');
+		// 	const result = favoriteList.filter((product) => {
+		// 		if (product.id !== data.id) {
+		// 			return product;
+		// 		}
+		// 	});
+		// 	setFavoriteList(result);
+		// }
 	};
 	return (
 		<MotionOpacity>
@@ -63,7 +80,7 @@ const ProductCard = ({ data }) => {
 				</div>
 				<div className='px-6 pt-4 pb-2'>
 					<span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2'>
-						{data?.category}
+						{data?.category.name}
 					</span>
 					<span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2'>
 						{data?.price}

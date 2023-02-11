@@ -6,12 +6,13 @@ import Categories from '../Categories';
 import MotionProgress from '../MotionAnimation/MotionProgress';
 import ProductCard from './ProductCard';
 import Pagination from '../Pagination';
+import Loader from '../Loader/Loader';
 
-let PageSize = 3;
+let PageSize = 12;
 
 const ProductList = () => {
 	const [products, setProducts] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	// pagination
 	const [currentPage, setCurrentPage] = useState(1);
@@ -27,16 +28,23 @@ const ProductList = () => {
 
 	useEffect(() => {
 		setLoading(true);
-		fetch(BASE_URL + 'products')
+		fetch(BASE_URL + '/products')
 			.then((res) => res.json())
 			.then((json) => {
-				setProducts(json);
-				setLoading(false);
-			});
+				setProducts(json.data);
+			})
+			.finally(() => setLoading(false));
 	}, []);
 
 	if (loading) {
-		return <div style={{ minHeight: '80vh' }}>Loading</div>;
+		return (
+			<div className='flex align-middle' style={{ minHeight: '80vh' }}>
+				<Loader />
+
+				<Loader />
+				<Loader />
+			</div>
+		);
 	}
 
 	return (

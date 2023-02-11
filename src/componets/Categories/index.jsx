@@ -6,10 +6,10 @@ const Categories = ({ setProducts }) => {
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		fetch(BASE_URL + 'products/categories')
+		fetch(BASE_URL + '/categories')
 			.then((res) => res.json())
 			.then((json) => {
-				setCategories(json);
+				setCategories(json.data);
 			});
 	}, []);
 
@@ -17,12 +17,13 @@ const Categories = ({ setProducts }) => {
 		setLoading(true);
 		fetch(
 			category === 'all'
-				? BASE_URL + 'products/'
-				: BASE_URL + 'products/category/' + category
+				? BASE_URL + 'categories/'
+				: BASE_URL + 'categories/' + category
 		)
 			.then((res) => res.json())
 			.then((json) => {
-				setProducts(json);
+				console.log(json);
+				setProducts(json.data);
 				setLoading(false);
 			});
 	};
@@ -38,7 +39,7 @@ const Categories = ({ setProducts }) => {
 					onClick={() => categoryHandler(category)}
 					className='bg-gray-400 px-3 py-1 shadow text-yellow-500'
 					key={i}>
-					{category}
+					{category.name}
 				</li>
 			))}
 		</ul>
