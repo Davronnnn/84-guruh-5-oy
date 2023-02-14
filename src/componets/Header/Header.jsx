@@ -1,24 +1,25 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Language } from '../../assets/language';
 import { LanguageContext } from '../../context/LanguageContext';
-import { ShopContext } from '../../context/ShopContext';
 
 import shopIcon from '../../assets/images/shopping-cart.png';
 import likeIcon from '../../assets/images/likeIcon.png';
-import FavoritesContext from '../../context/FavoritesContext';
 import { AuthContext } from '../../context/AuthContext';
 import { useSelector } from 'react-redux';
 
 export default function Header() {
+	// context
 	// const [navbarOpen, setNavbarOpen] = useState(false);
+	// const { favoriteList } = useContext(FavoritesContext);
 
+
+	
+	const [navbarOpen, setNavbarOpen] = useState(false);
 	const { user, logOut } = useContext(AuthContext);
 
-	// const { favoriteList } = useContext(FavoritesContext);
-	// const { counter } = useContext(ShopContext);
+	const { products } = useSelector((state) => state.favorite);
 
-	const { products, count } = useSelector((prev) => prev);
 	const { lang, setLang } = useContext(LanguageContext);
 
 	const changeLanguage = (e) => {
@@ -42,9 +43,7 @@ export default function Header() {
 						<span className='self-center text-xl font-semibold whitespace-nowrap dark:text-white'>
 							Flowbite
 						</span>
-						<span className=' ml-10 self-center text-xl font-semibold whitespace-nowrap dark:text-white'>
-							{/* {counter} */}
-						</span>
+						<span className=' ml-10 self-center text-xl font-semibold whitespace-nowrap dark:text-white'></span>
 					</a>
 					<ul className='flex'>
 						<li className='mr-6'>
@@ -82,8 +81,10 @@ export default function Header() {
 								0
 							</span>
 						</li>
-						<Link to={'/favorites'}>
-							<li className='ml-9 relative'>
+						<button
+							className='relative'
+							onClick={() => setNavbarOpen((prev) => !prev)}>
+							<li className='ml-9  '>
 								<img
 									width={40}
 									height={40}
@@ -91,11 +92,27 @@ export default function Header() {
 									alt=''
 								/>
 								<span className='text-white absolute  left-full bottom-3 bg-blue-600 py-1 px-2 rounded-full'>
-									{/* {favoriteList.length} */}
-									{count}
+									{products.length}
 								</span>
 							</li>
-						</Link>
+							{navbarOpen && (
+								<ul className='absolute top-full z-10 bg-black py-2 px-8'>
+									{products.slice(0, 2).map((item) => (
+										<li
+											className='text-white'
+											key={item.id}>
+											{item.title}
+										</li>
+									))}
+
+									<Link
+										className='text-blue-800'
+										to={'/favorites'}>
+										Barcha maxsulotlarni ko'rish
+									</Link>
+								</ul>
+							)}
+						</button>
 					</ul>
 
 					<div className='flex items-center lg:order-2'>

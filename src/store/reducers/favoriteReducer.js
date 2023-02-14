@@ -1,14 +1,15 @@
-import { initialState } from "..";
+import { initialState } from '..';
 
 export function favoriteReducer(state = initialState, action) {
 	switch (action.type) {
 		case 'addToFavorite':
 			const result = state.products;
 			result.push(action.payload);
+
 			return {
 				...state,
 				products: result,
-				count: state.count + 1,
+				count: result.length,
 			};
 		case 'removeFavorite':
 			const newProducts = state.products.filter((product) => {
@@ -24,7 +25,6 @@ export function favoriteReducer(state = initialState, action) {
 			};
 
 		default:
-			break;
+			return state;
 	}
-	return state;
 }

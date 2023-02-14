@@ -1,10 +1,11 @@
-import { createStore } from 'redux';
-import { favoriteReducer } from './reducers/favoriteReducer';
+// import { favoriteReducer } from './reducers/favoriteReducer';
+import { configureStore } from '@reduxjs/toolkit';
+import { favoriteReducer } from './slicers/favoriteSlicer';
 
-export const initialState = {
-	products: [],
-	count: 0,
-	login: true,
-};
-
-export const store = createStore(favoriteReducer);
+export const store = configureStore({
+	reducer: {
+		favorite: favoriteReducer,
+		// counter: counterSlicer.reducer,
+	},
+	devTools: true,
+});

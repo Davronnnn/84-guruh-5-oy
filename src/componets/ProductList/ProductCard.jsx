@@ -7,48 +7,25 @@ import MotionOpacity from '../MotionAnimation/MotionOpacity';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+	addToFavorite,
+	removeFavorite,
+} from '../../store/slicers/favoriteSlicer';
 const ProductCard = ({ data }) => {
 	const { increaseCounter } = useContext(ShopContext);
-	const { favoriteList, setFavoriteList } = useContext(FavoritesContext);
+	// const { favoriteList, setFavoriteList } = useContext(FavoritesContext);
 
-	const { products } = useSelector((state) => state);
 	const dispatch = useDispatch();
 
+	const { products } = useSelector((state) => state.favorite);
+
 	const addToFavorites = (data) => {
-		if (products.length > 0) {
-			products.forEach((product) => {
-				console.log(product, data);
-				if (product._id == data._id) {
-					dispatch({ type: 'removeFavorite', payload: data });
-				} else {
-					dispatch({ type: 'addToFavorite', payload: data });
-				}
-			});
+		const isExist = products.find((product) => product._id === data._id);
+		if (isExist) {
+			dispatch(removeFavorite(data));
 		} else {
-			dispatch({ type: 'addToFavorite', payload: data });
+			dispatch(addToFavorite(data));
 		}
-
-		// 	console.log(data);
-
-		// let has = false;
-		// favoriteList.forEach((product) => {
-		// 	if (product.id === data.id) {
-		// 		has = true;
-		// 	}
-		// });
-
-		// if (!has) {
-		// 	setFavoriteList([...favoriteList, data]);
-		// 	toast.success("Mahsulot qo'shildi!");
-		// } else {
-		// 	toast.warning('Mahsulot olib tashlandi!');
-		// 	const result = favoriteList.filter((product) => {
-		// 		if (product.id !== data.id) {
-		// 			return product;
-		// 		}
-		// 	});
-		// 	setFavoriteList(result);
-		// }
 	};
 	return (
 		<MotionOpacity>
