@@ -6,13 +6,14 @@ import FavoritesContext from '../context/FavoritesContext';
 const Favorites = () => {
 	// const { favoriteList } = useContext(FavoritesContext);
 
+	
 	const { products } = useSelector((state) => state.favorite);
 
 	return (
 		<div className='d-flex flex flex-wrap gap-3 p-10'>
 			{products.length === 0 && <div>Mahsulotlar saqlanmagan</div>}
-			{products.map((product) => (
-				<ProductCard key={product.id} data={product} />
+			{products.map((product, i) => (
+				<ProductCard key={i} data={product} />
 			))}
 		</div>
 	);

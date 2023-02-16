@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Language } from '../../assets/language';
 import { LanguageContext } from '../../context/LanguageContext';
@@ -6,15 +6,16 @@ import { LanguageContext } from '../../context/LanguageContext';
 import shopIcon from '../../assets/images/shopping-cart.png';
 import likeIcon from '../../assets/images/likeIcon.png';
 import { AuthContext } from '../../context/AuthContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTodos } from '../../store/slicers/favoriteSlicer';
 
 export default function Header() {
 	// context
 	// const [navbarOpen, setNavbarOpen] = useState(false);
 	// const { favoriteList } = useContext(FavoritesContext);
 
+	const dispatch = useDispatch();
 
-	
 	const [navbarOpen, setNavbarOpen] = useState(false);
 	const { user, logOut } = useContext(AuthContext);
 
@@ -25,6 +26,10 @@ export default function Header() {
 	const changeLanguage = (e) => {
 		setLang(e.target.value);
 	};
+
+	useEffect(() => {
+		dispatch(fetchTodos());
+	}, []);
 
 	const { pathname } = useLocation();
 
@@ -97,10 +102,8 @@ export default function Header() {
 							</li>
 							{navbarOpen && (
 								<ul className='absolute top-full z-10 bg-black py-2 px-8'>
-									{products.slice(0, 2).map((item) => (
-										<li
-											className='text-white'
-											key={item.id}>
+									{products.slice(0, 2).map((item, i) => (
+										<li className='text-white' key={i}>
 											{item.title}
 										</li>
 									))}

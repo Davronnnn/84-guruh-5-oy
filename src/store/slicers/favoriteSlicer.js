@@ -30,13 +30,11 @@ const favoriteSlicer = createSlice({
 });
 
 export const fetchTodos = () => {
-	console.log('fetched');
 	return async (dispatch) => {
 		const response = await fetch(BASE_URL + '/products');
 		const todos = await response.json();
 
-		console.log(todos);
-		dispatch(initialValue(todos));
+		dispatch(initialValue(todos.data));
 	};
 };
 

@@ -7,7 +7,7 @@ import ProductCard from './ProductCard';
 import Pagination from '../Pagination';
 import Loader from '../Loader/Loader';
 import { useDispatch } from 'react-redux';
-import { fetchTodos, initialValue } from '../../store/slicers/favoriteSlicer';
+import { fetchTodos } from '../../store/slicers/favoriteSlicer';
 import { getProducts } from '../../api/productApi';
 
 let PageSize = 12;
@@ -16,21 +16,18 @@ const ProductList = () => {
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-	// pagination
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const dispatch = useDispatch();
-	const currentTableData = useMemo(() => {
-		const firstPageIndex = (currentPage - 1) * PageSize;
-		const lastPageIndex = firstPageIndex + PageSize;
-		return products.slice(firstPageIndex, lastPageIndex);
-	}, [currentPage, products]);
 
-	// pagination
+	const currentTableData = useMemo(() => {
+		return products;
+	}, [products]);
+
 	const { lang } = useContext(LanguageContext);
 
 	useEffect(() => {
-		fetchTodos();
+		dispatch(fetchTodos());
 		setLoading(true);
 
 		getProducts('data')
@@ -39,6 +36,13 @@ const ProductList = () => {
 			})
 			.finally(() => setLoading(false));
 	}, []);
+
+	const pageHandler = (page) => {
+		setCurrentPage(page);
+		fetch(
+			`${BASE_URL}/api/products?_page=${page}&_limit=${PageSize}&_sort=id&_order=desc`
+		);
+	};
 
 	if (loading) {
 		return (
@@ -67,15 +71,15 @@ const ProductList = () => {
 				{/* {products.map((product) => (
 					<ProductCard key={product.id} data={product} />
 				))} */}
-				{currentTableData.map((item) => {
-					return <ProductCard key={item.id} data={item} />;
+				{currentTableData.map((item, i) => {
+					return <ProductCard key={i} data={item} />;
 				})}
 				<Pagination
 					className='pagination-bar'
 					currentPage={currentPage}
 					totalCount={products.length}
 					pageSize={PageSize}
-					onPageChange={(page) => setCurrentPage(page)}
+					onPageChange={pageHandler}
 				/>
 			</div>
 		</div>
